@@ -6,7 +6,8 @@ from typing import TypedDict
 
 import pdfplumber
 import spacy
-from docx import Document
+
+from jd_loader import SUPPORTED_ROLES, resolve_jd
 
 nlp = spacy.load("en_core_web_sm")
 
@@ -93,34 +94,33 @@ def _extract_text_from_pdf(pdf_path: Path) -> str:
     return "\n\n".join(t for t in pages_text if t)
 
 
-def _extract_text_from_docx(docx_path: Path) -> str:
-    doc = Document(str(docx_path))
-    return "\n".join(p.text for p in doc.paragraphs if p.text and p.text.strip()).strip()
-
-
-def _extract_text_from_file(path: Path) -> str:
-    suffix = path.suffix.lower()
-    if suffix == ".txt":
-        return path.read_text(encoding="utf-8", errors="ignore").strip()
-    if suffix == ".docx":
-        return _extract_text_from_docx(path)
-    if suffix == ".doc":
-        raise SystemExit("JD .doc is not supported. Please convert to .docx or .txt.")
-    raise SystemExit(f"Unsupported file type: {suffix}")
-
-
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
             "AI Role 1: NLP keyword & skill extraction.\n"
-            "Reads a resume PDF and JD (text or file), extracts skills as individual terms."
+            "Reads a resume PDF and a Kaggle JD, extracts skills as individual terms."
         )
     )
     parser.add_argument("--resume-pdf", type=str, required=True, help="Path to resume PDF.")
-
-    group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("--jd-text", type=str, help="Raw job description text.")
-    group.add_argument("--jd-file", type=str, help="Path to JD file (.txt or .docx).")
+    parser.add_argument(
+        "--jd-id",
+        type=str,
+        help=(
+            "JD id from the Kaggle dataset (e.g. software_engineer_0001). "
+            "If omitted, the first JD in the dataset is used."
+        ),
+    )
+    parser.add_argument(
+        "--role",
+        type=str,
+        choices=SUPPORTED_ROLES,
+        help="When --jd-id is omitted, pick the first JD for this role.",
+    )
+    parser.add_argument(
+        "--jds-path",
+        type=str,
+        help="Optional path to normalized JD JSON (default: data/jds/jds.json).",
+    )
     return parser.parse_args()
 
 
@@ -135,20 +135,19 @@ def main() -> None:
     if not resume_text:
         raise SystemExit("No text could be extracted from the resume PDF.")
 
-    if args.jd_text is not None:
-        jd_text = args.jd_text.strip()
-    else:
-        jd_path = Path(args.jd_file)
-        if not jd_path.is_file():
-            raise SystemExit(f"JD file not found: {jd_path}")
-        jd_text = _extract_text_from_file(jd_path)
+    jds_path = Path(args.jds_path) if args.jds_path else None
+    try:
+        jd = resolve_jd(jd_id=args.jd_id, role=args.role, jds_path=jds_path)
+    except (FileNotFoundError, ValueError) as exc:
+        raise SystemExit(str(exc)) from exc
 
+    jd_text = jd["description"]
     if not jd_text:
-        raise SystemExit("Job description text is empty.")
+        raise SystemExit(f"Job description text is empty for JD id: {jd['id']}")
 
-    print(extract_skills(resume_text, jd_text))
+    result = extract_skills(resume_text, jd_text)
+    print(result)
 
 
 if __name__ == "__main__":
     main()
-

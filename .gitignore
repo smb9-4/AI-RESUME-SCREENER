@@ -3,3 +3,7 @@ node_modules/
 dist/
 build/
 __pycache__
+data/jds/jds.json
+.venv/
+venv/
+uploads/
