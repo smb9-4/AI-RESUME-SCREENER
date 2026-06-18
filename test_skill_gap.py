@@ -3,7 +3,7 @@ Quick test — run from project root:
     python test_skill_gap.py
 """
 
-from analyzer.skill_gap import detect_skill_gaps
+from skill_gap import detect_skill_gaps
 
 SAMPLE_RESUME = """
 Skills: Python, FastAPI, PostgreSQL, Docker, Git, REST APIs, Pandas, NumPy, Linux

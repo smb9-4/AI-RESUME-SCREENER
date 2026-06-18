@@ -3,7 +3,7 @@ Quick test — run from project root:
     python test_llm.py
 """
 
-from analyzer.llm import analyze_section
+from llm import analyze_section
 
 SAMPLE_BULLETS = [
     "Responsible for working on the backend team",

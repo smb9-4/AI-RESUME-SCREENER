@@ -2,7 +2,8 @@
 Per-bullet LLM feedback engine.
 Supports Groq (free tier) and Ollama (local, offline).
 """
-
+from dotenv import load_dotenv
+load_dotenv()
 import os
 import json
 import re
@@ -21,7 +22,7 @@ class LLMProvider(str, Enum):
 
 
 PROVIDER      = LLMProvider(os.getenv("LLM_PROVIDER", "groq"))
-GROQ_API_KEY  = os.getenv("GROQ_API_KEY", "")
+GROQ_API_KEY  = os.getenv("GROQ_API_KEY", "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")
 GROQ_MODEL    = os.getenv("GROQ_MODEL",   "llama3-8b-8192")   # free tier
 OLLAMA_URL    = os.getenv("OLLAMA_URL",   "http://localhost:11434")
 OLLAMA_MODEL  = os.getenv("OLLAMA_MODEL", "llama3")
