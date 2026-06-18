@@ -117,7 +117,11 @@ Each experience bullet is sent individually to the LLM with a structured prompt.
 | Variable | Default | Description |
 |---|---|---|
 | `LLM_PROVIDER` | `groq` | `groq` or `ollama` |
+<<<<<<< HEAD
 | `GROQ_API_KEY` |GROK API HERE |
+=======
+| `GROQ_API_KEY` |GROK API KEY EXISTS HERE |
+>>>>>>> 3219af089695ef68696cb2510a188d1e56a8c437
 | `GROQ_MODEL` | `llama-3.3-70b-versatile` | Groq model ID |
 | `OLLAMA_URL` | `http://localhost:11434` | Ollama server URL |
 | `OLLAMA_MODEL` | `llama3` | Ollama model name |
