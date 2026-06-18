@@ -1,0 +1,30 @@
+{
+  "technical": [
+    "python", "java", "javascript", "typescript", "c++", "c#", "go", "rust", "scala",
+    "sql", "nosql", "machine learning", "deep learning", "nlp", "computer vision",
+    "data structures", "algorithms", "system design", "rest api", "graphql",
+    "microservices", "distributed systems", "linux", "bash", "git", "oop",
+    "functional programming", "concurrency", "multithreading", "api design"
+  ],
+  "tools": [
+    "docker", "kubernetes", "aws", "gcp", "azure", "terraform", "ansible",
+    "jenkins", "github actions", "gitlab ci", "prometheus", "grafana",
+    "elasticsearch", "kafka", "redis", "postgresql", "mongodb", "mysql",
+    "spark", "airflow", "dbt", "tableau", "power bi",
+    "react", "nextjs", "fastapi", "django", "flask", "spring boot",
+    "pandas", "numpy", "scikit-learn", "pytorch", "tensorflow",
+    "git", "jira", "confluence", "postman", "swagger", "nginx"
+  ],
+  "soft": [
+    "communication", "teamwork", "leadership", "problem solving",
+    "critical thinking", "time management", "collaboration", "adaptability",
+    "project management", "stakeholder management", "mentoring",
+    "presentation", "documentation", "agile", "scrum", "kanban"
+  ],
+  "domain": [
+    "fintech", "healthtech", "edtech", "e-commerce", "saas", "b2b", "b2c",
+    "data engineering", "data science", "mlops", "devops", "backend", "frontend",
+    "full stack", "mobile", "ios", "android", "cloud native", "cybersecurity",
+    "blockchain", "iot", "embedded systems", "computer networks"
+  ]
+}
