@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="jd-container">
+  <h2>Set Job Description</h2>
+
+  <form method="POST" action="{{ url_for('save_jd') }}">
+    <label>Required Skills:</label><br>
+    <input type="text" name="skills" placeholder="e.g. Python, Flask, MongoDB"><br><br>
+
+    <label>Technologies:</label><br>
+    <input type="text" name="technologies" placeholder="e.g. Docker, AWS, Git"><br><br>
+
+    <label>Experience (Years):</label><br>
+    <input type="number" name="experience" min="0" placeholder="e.g. 3"><br><br>
+
+    <label>Soft Skills:</label><br>
+    <input type="text" name="soft_skills" placeholder="e.g. Communication, Leadership"><br><br>
+
+    <button type="submit" class="save-jd-btn">Save JD</button>
+  </form>
+</div>
+
+{% endblock %}

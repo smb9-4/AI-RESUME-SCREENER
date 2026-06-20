@@ -1,0 +1,206 @@
+/* ------------------------------
+   Global Reset & Typography
+------------------------------ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+  background: #050816;
+  color: #fff;
+  min-height: 100vh;
+}
+
+/* ------------------------------
+   Navigation Bar
+------------------------------ */
+nav {
+  padding: 20px 40px;
+  background: #0d1326;
+  box-shadow: 0 0 20px rgba(127, 90, 240, 0.3);
+}
+
+nav h1 {
+  font-size: 1.8rem;
+  color: #fff;
+}
+
+/* ------------------------------
+   Landing Page Cards
+------------------------------ */
+.cards {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  margin-top: 100px;
+}
+
+.card {
+  width: 300px;
+  padding: 40px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  text-decoration: none;
+  color: white;
+  transition: 0.3s;
+  text-align: center;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 0 25px #7f5af0;
+}
+
+/* ------------------------------
+   Glass Containers (Forms, Dashboards)
+------------------------------ */
+.glass {
+  padding: 30px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15px);
+  box-shadow: 0 0 25px rgba(127, 90, 240, 0.3);
+  margin: 60px auto;
+  max-width: 500px;
+}
+
+/* ------------------------------
+   Form Layouts
+------------------------------ */
+.page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+}
+
+.form-box {
+  width: 400px;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  box-shadow: 0 0 25px #7f5af0;
+  animation: fadeIn 0.6s ease forwards;
+}
+
+input {
+  width: 100%;
+  padding: 15px;
+  margin-top: 15px;
+  background: #111827;
+  border: none;
+  color: white;
+  border-radius: 10px;
+}
+
+button {
+  margin-top: 20px;
+  padding: 15px 30px;
+  background: #7f5af0;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  box-shadow: 0 0 20px #7f5af0;
+  transform: scale(1.05);
+}
+
+/* ------------------------------
+   Links & Text
+------------------------------ */
+.link-text {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.link-text a {
+  color: #7f5af0;
+  text-decoration: none;
+}
+
+.link-text a:hover {
+  text-decoration: underline;
+}
+
+/* ------------------------------
+   Dashboard & Application Split
+------------------------------ */
+.split {
+  display: flex;
+  gap: 30px;
+  padding: 40px;
+}
+
+.left,
+.right {
+  flex: 1;
+}
+
+iframe {
+  width: 100%;
+  height: 700px;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(127, 90, 240, 0.3);
+}
+
+/* ------------------------------
+   Animations
+------------------------------ */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.app-table {
+  width: 90%;
+  margin: 20px auto;
+  border-collapse: collapse;
+  color: #fff;
+  background: rgba(20, 20, 40, 0.6);
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(120, 0, 255, 0.3);
+}
+
+.app-table th, .app-table td {
+  padding: 12px 20px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.app-table th {
+  color: #a0a0ff;
+  font-weight: 600;
+}
+
+.app-table a {
+  color: #7f7fff;
+  text-decoration: none;
+}
+
+.app-table a:hover {
+  color: #b0b0ff;
+  text-shadow: 0 0 5px #b0b0ff;
+}
+.set-jd-btn, .save-jd-btn {
+  background-color: #7f00ff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 0 10px rgba(120, 0, 255, 0.4);
+}
+
+.set-jd-btn:hover, .save-jd-btn:hover {
+  background-color: #9f30ff;
+}

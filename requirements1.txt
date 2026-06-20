@@ -1,0 +1,11 @@
+Flask
+pymongo
+python-dotenv
+pdfplumber
+spacy
+sentence-transformers
+scikit-learn
+numpy
+reportlab
+groq
+httpx

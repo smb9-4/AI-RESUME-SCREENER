@@ -3,10 +3,10 @@ import json
 import re
 from pathlib import Path
 from typing import TypedDict
-
+from docx import Document
 import pdfplumber
 import spacy
-
+# from nlp_extractor import extract_skills, _extract_text_from_pdf, _extract_text_from_docx
 from jd_loader import SUPPORTED_ROLES, resolve_jd
 
 nlp = spacy.load("en_core_web_sm")
@@ -31,6 +31,9 @@ class SkillExtractionResult(TypedDict):
 def _normalize(text: str) -> str:
     return re.sub(r"\s+", " ", text.lower().strip())
 
+def _extract_text_from_docx(docx_path: str) -> str:
+    doc = Document(docx_path)
+    return "\n".join([para.text for para in doc.paragraphs if para.text.strip()])
 
 def _extract_candidates(doc: spacy.tokens.Doc) -> set[str]:
     candidates: set[str] = set()

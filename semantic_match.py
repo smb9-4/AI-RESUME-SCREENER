@@ -8,7 +8,9 @@ from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 
 from jd_loader import SUPPORTED_ROLES, JobDescription, load_jds
+from sentence_transformers import SentenceTransformer, util
 
+model = SentenceTransformer('all-MiniLM-L6-v2')
 
 class SemanticMatchResult(TypedDict):
     jd_id: str
@@ -37,19 +39,32 @@ def load_model(model_name: str = "all-MiniLM-L6-v2") -> SentenceTransformer:
     return SentenceTransformer(model_name)
 
 
-def compute_similarity(
-    resume_text: str, jd_text: str, model: Optional[SentenceTransformer] = None
-) -> float:
-    if model is None:
-        model = load_model()
+# def compute_similarity(
+#     resume_text: str, jd_text: str, model: Optional[SentenceTransformer] = None
+# ) -> float:
+#     if model is None:
+#         model = load_model()
 
+#     resume_vec = model.encode(resume_text, convert_to_numpy=True)
+#     jd_vec = model.encode(jd_text, convert_to_numpy=True)
+
+#     score = cosine_similarity([resume_vec], [jd_vec])[0][0]
+#     return float(score * 100.0)
+
+def compute_similarity(extracted_skills, jd_text):
+    # Convert both to text
+    resume_text = " ".join(extracted_skills)
+    jd_text = jd_text
+
+    # Encode as text, not dict
     resume_vec = model.encode(resume_text, convert_to_numpy=True)
     jd_vec = model.encode(jd_text, convert_to_numpy=True)
 
-    score = cosine_similarity([resume_vec], [jd_vec])[0][0]
-    return float(score * 100.0)
+    # Compute cosine similarity
+    similarity_score = util.cos_sim(resume_vec, jd_vec)[0][0]
+    matched_skills = [skill for skill in extracted_skills if skill.lower() in jd_text.lower()]
 
-
+    return float(similarity_score), matched_skills
 def analyze_resume_against_jds(
     resume_text: str,
     job_descriptions: list[JobDescription],

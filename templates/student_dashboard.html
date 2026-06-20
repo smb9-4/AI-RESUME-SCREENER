@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="glass">
+
+  <h2>Welcome Student</h2>
+
+  <form
+    method="POST"
+    action="/upload_resume"
+    enctype="multipart/form-data">
+
+    <input type="file" name="resume">
+
+    <button type="submit">
+      Upload Resume
+    </button>
+
+  </form>
+
+</div>
+
+<!-- ✅ Flash message popup -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <script>
+      alert("{{ messages[0] }}");
+    </script>
+  {% endif %}
+{% endwith %}
+
+{% endblock %}

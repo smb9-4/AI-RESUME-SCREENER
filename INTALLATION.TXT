@@ -1,0 +1,11 @@
+venv/
+python -m venv venv
+venv\Scripts\activate
+python -m pip install --upgrade pip
+pip install flask pymongo pdfplumber reportlab python-dotenv
+pip install spacy
+python -m spacy download en_core_web_sm
+pip install sentence-transformers
+
+pip install torch torchvision torchaudio
+pip install spacy sentence-transformers

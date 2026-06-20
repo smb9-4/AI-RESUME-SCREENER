@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="dashboard-container">
+  <h2>HR Dashboard</h2>
+
+  <!-- ✅ Replace textarea with button -->
+  <form action="{{ url_for('set_jd_page') }}" method="get">
+    <button type="submit" class="set-jd-btn">SET JD</button>
+  </form>
+
+  <h2>Total Applications : {{ applications|length }}</h2>
+
+  <table class="app-table">
+    <thead>
+      <tr>
+        <th>Applicant Name</th>
+        <th>Resume</th>
+        <th>AI Scorecard</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for app in applications %}
+      <tr>
+        <td>{{ app.student_name }}</td>
+        <td><a href="{{ url_for('view_resume', filename=app.resume_filename) }}">View Resume</a></td>
+        <td><a href="{{ url_for('view_report', filename=app.report_filename) }}">Download AI Scorecard (PDF)</a></td>
+        <td>{{ app.status }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

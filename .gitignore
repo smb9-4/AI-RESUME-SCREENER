@@ -1,9 +1,12 @@
-node_modules/
-.env
-dist/
-build/
-__pycache__
-data/jds/jds.json
-.venv/
+# Ignore virtual environments
+venv311/
 venv/
+ENV/
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+
+# Ignore local uploads/reports
 uploads/
+reports/

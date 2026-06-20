@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="split">
+
+<div class="left">
+
+<iframe
+src="{{ resume_path }}">
+</iframe>
+
+</div>
+
+<div class="right">
+
+<h2>AI Score</h2>
+
+<h1>{{ score }}</h1>
+
+<h3>Matched Skills</h3>
+
+<ul>
+{% for skill in matched_skills %}
+<li>{{ skill }}</li>
+{% endfor %}
+</ul>
+
+<h3>Missing Skills</h3>
+
+<ul>
+{% for skill in missing_skills %}
+<li>{{ skill }}</li>
+{% endfor %}
+</ul>
+
+<h3>Feedback</h3>
+
+<p>{{ feedback }}</p>
+
+</div>
+
+</div>
+
+{% endblock %}
