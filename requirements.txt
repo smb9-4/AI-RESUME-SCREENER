@@ -8,3 +8,14 @@ reportlab>=4.0.0
 kagglehub>=0.3.0
 pandas>=2.0.0
 openpyxl>=3.1.0
+Flask
+pymongo
+python-dotenv
+pdfplumber
+spacy
+sentence-transformers
+scikit-learn
+numpy
+reportlab
+groq
+httpx
