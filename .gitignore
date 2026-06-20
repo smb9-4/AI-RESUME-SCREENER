@@ -2,7 +2,7 @@
 venv311/
 venv/
 ENV/
-
+.env
 # Ignore Python cache
 __pycache__/
 *.pyc
