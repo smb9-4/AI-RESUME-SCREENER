@@ -6,6 +6,7 @@ numpy
 pdfplumber
 python-docx
 reportlab
+fpdf2
 groq
 httpx
 spacy==3.8.0
