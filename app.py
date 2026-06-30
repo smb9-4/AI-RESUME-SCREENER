@@ -19,12 +19,24 @@ import os
 # -------------------------------
 # Flask & MongoDB setup
 # -------------------------------
+# app = Flask(__name__)
+# app.secret_key = "supersecretkey"
+
+# db = client["ai_resume_screener"]
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
 
-client = pymongo.MongoClient("mongodb://localhost:27017/")
-db = client["ai_resume_screener"]
+MONGO_URI = os.environ.get("MONGO_URI")
 
+client = pymongo.MongoClient(
+    MONGO_URI,
+    serverSelectionTimeoutMS=5000
+)
+
+client.admin.command("ping")
+print("MongoDB Connected")
+
+db = client["ai_resume_screener"]
 students = db["students"]
 hr = db["hr"]
 jd_collection = db['job_descriptions']
