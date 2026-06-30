@@ -10,8 +10,13 @@ from sklearn.metrics.pairwise import cosine_similarity
 from jd_loader import SUPPORTED_ROLES, JobDescription, load_jds
 from sentence_transformers import SentenceTransformer, util
 
-model = SentenceTransformer('all-MiniLM-L6-v2')
+_model = None
 
+def get_model():
+    global _model
+    if _model is None:
+        _model = SentenceTransformer("all-MiniLM-L6-v2")
+    return _model
 class SemanticMatchResult(TypedDict):
     jd_id: str
     role: str
@@ -53,6 +58,7 @@ def load_model(model_name: str = "all-MiniLM-L6-v2") -> SentenceTransformer:
 
 def compute_similarity(extracted_skills, jd_text):
     # Convert both to text
+    model = get_model()
     resume_text = " ".join(extracted_skills)
     jd_text = jd_text
 

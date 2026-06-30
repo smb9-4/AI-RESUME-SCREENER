@@ -24,6 +24,7 @@ import os
 
 # db = client["ai_resume_screener"]
 app = Flask(__name__)
+print("Creating Flask app")
 app.secret_key = "supersecretkey"
 
 MONGO_URI = os.environ.get("MONGO_URI")
@@ -36,6 +37,7 @@ client = pymongo.MongoClient(
 
 client.admin.command("ping")
 print("MongoDB Connected")
+print("Reached after MongoDB")
 
 db = client["ai_resume_screener"]
 students = db["students"]
