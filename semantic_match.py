@@ -15,7 +15,9 @@ _model = None
 def get_model():
     global _model
     if _model is None:
+        print("Loading SentenceTransformer...")
         _model = SentenceTransformer("all-MiniLM-L6-v2")
+        print("SentenceTransformer loaded.")
     return _model
 class SemanticMatchResult(TypedDict):
     jd_id: str
@@ -41,34 +43,23 @@ def extract_text_from_pdf(pdf_path: Path) -> str:
 
 
 def load_model(model_name: str = "all-MiniLM-L6-v2") -> SentenceTransformer:
-    return SentenceTransformer(model_name)
+    return get_model()
 
-
-# def compute_similarity(
-#     resume_text: str, jd_text: str, model: Optional[SentenceTransformer] = None
-# ) -> float:
-#     if model is None:
-#         model = load_model()
-
-#     resume_vec = model.encode(resume_text, convert_to_numpy=True)
-#     jd_vec = model.encode(jd_text, convert_to_numpy=True)
-
-#     score = cosine_similarity([resume_vec], [jd_vec])[0][0]
-#     return float(score * 100.0)
 
 def compute_similarity(extracted_skills, jd_text):
-    # Convert both to text
     model = get_model()
-    resume_text = " ".join(extracted_skills)
-    jd_text = jd_text
 
-    # Encode as text, not dict
+    resume_text = " ".join(extracted_skills)
+
     resume_vec = model.encode(resume_text, convert_to_numpy=True)
     jd_vec = model.encode(jd_text, convert_to_numpy=True)
 
-    # Compute cosine similarity
     similarity_score = util.cos_sim(resume_vec, jd_vec)[0][0]
-    matched_skills = [skill for skill in extracted_skills if skill.lower() in jd_text.lower()]
+
+    matched_skills = [
+        skill for skill in extracted_skills
+        if skill.lower() in jd_text.lower()
+    ]
 
     return float(similarity_score), matched_skills
 def analyze_resume_against_jds(
@@ -79,7 +70,7 @@ def analyze_resume_against_jds(
     top_n: int = 10,
 ) -> SemanticAnalysisResult:
     if model is None:
-        model = load_model()
+        model = get_model()
 
     resume_vec = model.encode(resume_text, convert_to_numpy=True)
     matches: list[SemanticMatchResult] = []

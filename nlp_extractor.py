@@ -3,19 +3,39 @@ import json
 import re
 from pathlib import Path
 from typing import TypedDict
+
 from docx import Document
 import pdfplumber
 import spacy
-# from nlp_extractor import extract_skills, _extract_text_from_pdf, _extract_text_from_docx
 from jd_loader import SUPPORTED_ROLES, resolve_jd
 
-nlp = spacy.load("en_core_web_sm")
+print("nlp_extractor.py imported")
 
+# -------------------------------
+# Lazy loading for spaCy
+# -------------------------------
+_nlp = None
+
+
+def get_nlp():
+    global _nlp
+    if _nlp is None:
+        print("Loading spaCy model...")
+        _nlp = spacy.load("en_core_web_sm")
+        print("spaCy model loaded.")
+    return _nlp
+
+
+# -------------------------------
+# Load skills list
+# -------------------------------
 _SKILLS_PATH = Path(__file__).parent / "skills_list.json"
+
 with _SKILLS_PATH.open(encoding="utf-8") as f:
     _SKILLS_LIST: list[str] = json.load(f)
 
 _SKILLS_SET = {skill.lower() for skill in _SKILLS_LIST}
+
 _MULTI_WORD_SKILLS = sorted(
     (skill for skill in _SKILLS_SET if " " in skill),
     key=len,
@@ -31,9 +51,13 @@ class SkillExtractionResult(TypedDict):
 def _normalize(text: str) -> str:
     return re.sub(r"\s+", " ", text.lower().strip())
 
+
 def _extract_text_from_docx(docx_path: str) -> str:
     doc = Document(docx_path)
-    return "\n".join([para.text for para in doc.paragraphs if para.text.strip()])
+    return "\n".join(
+        para.text for para in doc.paragraphs if para.text.strip()
+    )
+
 
 def _extract_candidates(doc: spacy.tokens.Doc) -> set[str]:
     candidates: set[str] = set()
@@ -52,7 +76,9 @@ def _extract_skills_from_text(text: str) -> list[str]:
     if not text or not text.strip():
         return []
 
+    nlp = get_nlp()
     doc = nlp(text)
+
     candidates = _extract_candidates(doc)
     normalized_text = _normalize(text)
     matched: set[str] = set()
@@ -66,22 +92,31 @@ def _extract_skills_from_text(text: str) -> list[str]:
             matched.add(skill)
 
     for skill in _SKILLS_SET:
-        if " " not in skill and re.search(rf"\b{re.escape(skill)}\b", normalized_text):
+        if " " not in skill and re.search(
+            rf"\b{re.escape(skill)}\b",
+            normalized_text,
+        ):
             matched.add(skill)
 
     multi_word = {skill for skill in matched if " " in skill}
+
     filtered: set[str] = set()
+
     for skill in matched:
         if " " in skill:
             filtered.add(skill)
             continue
+
         if not any(skill in phrase for phrase in multi_word):
             filtered.add(skill)
 
     return sorted(filtered)
 
 
-def extract_skills(resume_text: str, jd_text: str) -> SkillExtractionResult:
+def extract_skills(
+    resume_text: str,
+    jd_text: str,
+) -> SkillExtractionResult:
     return {
         "resume_skills": _extract_skills_from_text(resume_text),
         "jd_skills": _extract_skills_from_text(jd_text),
@@ -90,10 +125,12 @@ def extract_skills(resume_text: str, jd_text: str) -> SkillExtractionResult:
 
 def _extract_text_from_pdf(pdf_path: Path) -> str:
     pages_text: list[str] = []
+
     with pdfplumber.open(str(pdf_path)) as pdf:
         for page in pdf.pages:
             text = page.extract_text() or ""
             pages_text.append(text.strip())
+
     return "\n\n".join(t for t in pages_text if t)
 
 
@@ -101,29 +138,39 @@ def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
             "AI Role 1: NLP keyword & skill extraction.\n"
-            "Reads a resume PDF and a Kaggle JD, extracts skills as individual terms."
+            "Reads a resume PDF and a Kaggle JD."
         )
     )
-    parser.add_argument("--resume-pdf", type=str, required=True, help="Path to resume PDF.")
+
+    parser.add_argument(
+        "--resume-pdf",
+        type=str,
+        required=True,
+        help="Path to resume PDF.",
+    )
+
     parser.add_argument(
         "--jd-id",
         type=str,
         help=(
-            "JD id from the Kaggle dataset (e.g. software_engineer_0001). "
-            "If omitted, the first JD in the dataset is used."
+            "JD id from the Kaggle dataset "
+            "(e.g. software_engineer_0001)."
         ),
     )
+
     parser.add_argument(
         "--role",
         type=str,
         choices=SUPPORTED_ROLES,
-        help="When --jd-id is omitted, pick the first JD for this role.",
+        help="Role filter.",
     )
+
     parser.add_argument(
         "--jds-path",
         type=str,
-        help="Optional path to normalized JD JSON (default: data/jds/jds.json).",
+        help="Optional path to JD JSON.",
     )
+
     return parser.parse_args()
 
 
@@ -131,22 +178,34 @@ def main() -> None:
     args = _parse_args()
 
     resume_path = Path(args.resume_pdf)
+
     if not resume_path.is_file():
         raise SystemExit(f"Resume PDF not found: {resume_path}")
 
     resume_text = _extract_text_from_pdf(resume_path)
+
     if not resume_text:
-        raise SystemExit("No text could be extracted from the resume PDF.")
+        raise SystemExit(
+            "No text could be extracted from the resume PDF."
+        )
 
     jds_path = Path(args.jds_path) if args.jds_path else None
+
     try:
-        jd = resolve_jd(jd_id=args.jd_id, role=args.role, jds_path=jds_path)
+        jd = resolve_jd(
+            jd_id=args.jd_id,
+            role=args.role,
+            jds_path=jds_path,
+        )
     except (FileNotFoundError, ValueError) as exc:
         raise SystemExit(str(exc)) from exc
 
     jd_text = jd["description"]
+
     if not jd_text:
-        raise SystemExit(f"Job description text is empty for JD id: {jd['id']}")
+        raise SystemExit(
+            f"Job description text is empty for JD id: {jd['id']}"
+        )
 
     result = extract_skills(resume_text, jd_text)
     print(result)
