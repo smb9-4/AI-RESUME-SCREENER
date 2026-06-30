@@ -15,6 +15,7 @@ from semantic_match import compute_similarity
 from skill_gap import detect_skill_gaps
 from llm import analyze_section
 from fpdf import FPDF
+import os
 # -------------------------------
 # Flask & MongoDB setup
 # -------------------------------
@@ -272,5 +273,9 @@ def logout():
 # -------------------------------
 # Run app
 # -------------------------------
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    # Read the port dynamically from Render, default to 5000 if running locally
+    port = int(os.environ.get("PORT", 5000))
+    
+    # Bind to 0.0.0.0 so Render can route traffic to it
+    app.run(host="0.0.0.0", port=port)
