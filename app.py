@@ -27,6 +27,7 @@ app = Flask(__name__)
 app.secret_key = "supersecretkey"
 
 MONGO_URI = os.environ.get("MONGO_URI")
+# print("MONGO_URI =", os.environ.get("MONGO_URI"))
 
 client = pymongo.MongoClient(
     MONGO_URI,
